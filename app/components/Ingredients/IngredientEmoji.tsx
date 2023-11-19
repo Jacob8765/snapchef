@@ -11,13 +11,21 @@ const TAILWIND_PASTEL_COLORS = [
   'bg-pink-100',
 ];
 
-export const IngredientEmoji = ({name}: {name: string}) => {
+export const IngredientEmoji = ({
+  name,
+  disabled,
+}: {
+  name: string;
+  disabled?: boolean;
+}) => {
   return (
     <View
       className={`rounded-lg p-3 text-2xl ${
-        TAILWIND_PASTEL_COLORS[
-          name.charCodeAt(0) % TAILWIND_PASTEL_COLORS.length
-        ]
+        disabled
+          ? 'bg-gray-100'
+          : TAILWIND_PASTEL_COLORS[
+              name.charCodeAt(0) % TAILWIND_PASTEL_COLORS.length
+            ]
       }`}>
       <Text className="text-xl">{name}</Text>
     </View>
