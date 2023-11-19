@@ -14,6 +14,7 @@ import {
   useCameraDevice,
   useCameraPermission,
 } from 'react-native-vision-camera';
+import {IngredientsContext} from '../contexts/IngredientsContext';
 
 /*
  * 1. Take the picture
@@ -22,11 +23,12 @@ import {
  * 4. Navigate back to the ingredients page
  */
 
-export const CameraView = () => {
+export const CameraView = ({navigation}: {navigation: any}) => {
   const {hasPermission, requestPermission} = useCameraPermission();
   const isFocused = useIsFocused();
   const [isActive, setIsActive] = useState(true); // [false, setIsActive
   const [photo, setPhoto] = useState<Blob | null>(null);
+  const {ingredients, setIngredients} = React.useContext(IngredientsContext);
 
   const camera = useRef<Camera>(null);
 
@@ -87,7 +89,24 @@ export const CameraView = () => {
     const data = await result.blob();
     setIsActive(false);
     setPhoto(data);
+    getIngredients(data);
     console.log(result, data);
+  };
+
+  const getIngredients = async (photo: Blob) => {
+    //simulate a delay
+    setTimeout(() => {
+      // add some new ingredients
+      const newIngredients = [
+        ...ingredients,
+        {name: 'Tomato', emoji: '🍅'},
+        {name: 'Onion', emoji: '🧅'},
+        {name: 'Garlic', emoji: '🧄'},
+      ];
+      setIngredients(newIngredients);
+      // navigate back to the ingredients page
+      navigation.navigate('Ingredients');
+    }, 3000);
   };
 
   if (!hasPermission) {

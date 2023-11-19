@@ -12,32 +12,7 @@ import {
 import {IngredientsContext} from '../contexts/IngredientsContext';
 import {Ingredient} from '../types/Ingredient';
 import {SwipeListView} from 'react-native-swipe-list-view';
-
-const TAILWIND_PASTEL_COLORS = [
-  'bg-red-100',
-  'bg-yellow-100',
-  'bg-green-100',
-  'bg-blue-100',
-  'bg-indigo-100',
-  'bg-purple-100',
-  'bg-pink-100',
-];
-
-const IngredientItem = ({item, index}: {item: Ingredient; index: number}) => {
-  return (
-    <View className=" bg-gray-50 d-flex flex-row justify-start rounded-lg p-2 items-center m-1">
-      <View
-        className={`rounded-lg p-3 text-2xl ${
-          TAILWIND_PASTEL_COLORS[index % TAILWIND_PASTEL_COLORS.length]
-        }`}>
-        <Text className="text-xl">{item.emoji}</Text>
-      </View>
-      <View className="ml-4">
-        <Text className="text-xl">{item.name}</Text>
-      </View>
-    </View>
-  );
-};
+import {IngredientItem} from '../components/Ingredients/IngredientItem';
 
 const renderDeleteButton = ({handleDelete}: {handleDelete: () => void}) => {
   return (
@@ -54,15 +29,8 @@ const renderDeleteButton = ({handleDelete}: {handleDelete: () => void}) => {
 export const Ingredients = ({navigation}: {navigation: any}) => {
   const {ingredients, setIngredients} = React.useContext(IngredientsContext);
 
-  useEffect(() => {
-    setIngredients([
-      {name: 'Flour', emoji: '🌾'},
-      {name: 'Sugar', emoji: '🍬'},
-      {name: 'Eggs', emoji: '🥚'},
-    ]);
-  }, []);
-
   const deleteIngredient = (index: number) => {
+    console.log('deleteIngredient', index);
     if (!ingredients) {
       return;
     }
@@ -77,16 +45,17 @@ export const Ingredients = ({navigation}: {navigation: any}) => {
         <SwipeListView
           ListHeaderComponent={
             <Text className="text-3xl font-serif mb-3">
-              My Ingredients{ingredients?.length && ` (${ingredients.length})`}:
+              My Ingredients
+              {ingredients?.length > 0 && ` (${ingredients.length})`}:
             </Text>
           }
           data={ingredients}
           renderItem={({item, index}) => (
-            <IngredientItem key={item.name} item={item} index={index} />
+            <IngredientItem key={item.name} item={item} />
           )}
           renderHiddenItem={(item, index) =>
             renderDeleteButton({
-              handleDelete: () => deleteIngredient(index as unknown as number),
+              handleDelete: () => deleteIngredient(item.index),
             })
           }
           rightOpenValue={-75}
