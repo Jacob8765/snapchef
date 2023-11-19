@@ -74,19 +74,6 @@ export const Ingredients = ({navigation}: {navigation: any}) => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <View className="p-3 flex-1">
-        {/* <FlatList
-        data={ingredients}
-        renderItem={({item}) => <IngredientItem {...item} />}
-      /> */}
-        {/* <ScrollView>
-        <Text className="text-3xl font-serif mb-3">
-          My Ingredients{ingredients?.length && ` (${ingredients.length})`}:
-        </Text>
-        {ingredients?.map((ingredient, i) => (
-          <IngredientItem item={ingredient} key={ingredient.name} index={i} />
-        ))}
-      </ScrollView> */}
-
         <SwipeListView
           ListHeaderComponent={
             <Text className="text-3xl font-serif mb-3">
@@ -110,7 +97,7 @@ export const Ingredients = ({navigation}: {navigation: any}) => {
         <View className="d-flex flex-col p-1">
           <TouchableOpacity
             className="rounded-lg bg-indigo-400 p-4 grow mb-2"
-            onPressOut={() => navigation.navigate('Recipes')}>
+            onPress={() => navigation.navigate('Recipes')}>
             <Text className="text-3xl text-white font-serif text-center">
               🔍 search for recipes
             </Text>
