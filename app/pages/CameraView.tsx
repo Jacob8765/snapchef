@@ -7,10 +7,16 @@ import {
   useCameraPermission,
 } from 'react-native-vision-camera';
 
+/*
+ * 1. Take the picture
+ * 2. Show a little animation
+ * 3. Update the ingredients
+ * 4. Navigate back to the ingredients page
+ */
+
 export const CameraView = () => {
   const {hasPermission, requestPermission} = useCameraPermission();
   const isFocused = useIsFocused();
-  //   const appState = useAppState()
   const isActive = isFocused;
 
   const camera = useRef<Camera>(null);
@@ -34,15 +40,16 @@ export const CameraView = () => {
         photo={true}
         style={{flex: 1}}
         device={device}
-        isActive={true}
+        isActive={isActive}
       />
       <Button
         title="Take photo"
         onPress={async () => {
-          const photo = await camera.current?.takePhoto({
-            qualityPrioritization: 'quality',
-          });
-          console.log(photo);
+          if (!camera.current) return;
+          const file = await camera.current.takePhoto();
+          const result = await fetch(`file://${file.path}`);
+          const data = await result.blob();
+          console.log(result, data);
         }}
       />
     </>

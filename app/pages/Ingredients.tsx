@@ -27,10 +27,10 @@ const IngredientItem = ({item, index}: {item: Ingredient; index: number}) => {
   return (
     <View className=" bg-gray-50 d-flex flex-row justify-start rounded-lg p-2 items-center m-1">
       <View
-        className={`rounded-lg p-3 ${
+        className={`rounded-lg p-3 text-2xl ${
           TAILWIND_PASTEL_COLORS[index % TAILWIND_PASTEL_COLORS.length]
         }`}>
-        <Text>{item.emoji}</Text>
+        <Text className="text-xl">{item.emoji}</Text>
       </View>
       <View className="ml-4">
         <Text className="text-xl">{item.name}</Text>
@@ -44,7 +44,7 @@ const renderDeleteButton = ({handleDelete}: {handleDelete: () => void}) => {
     <TouchableOpacity onPressOut={handleDelete}>
       <View className="d-flex flex-row justify-end m-1">
         <View className="rounded-lg bg-red-500 p-5">
-          <Text>🗑️</Text>
+          <Text className="text-xl">🗑️</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -95,7 +95,7 @@ export const Ingredients = ({navigation}: {navigation: any}) => {
           }
           data={ingredients}
           renderItem={({item, index}) => (
-            <IngredientItem item={item} index={index} />
+            <IngredientItem key={item.name} item={item} index={index} />
           )}
           renderHiddenItem={(item, index) =>
             renderDeleteButton({
