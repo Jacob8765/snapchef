@@ -17,10 +17,10 @@ interface RecipeCardProps {
 const Badge = ({text, gradient}: {text: string; gradient: boolean}) => {
   return (
     <View
-      className={`rounded-lg border-1 p-1 m-1 ${
-        gradient && 'bg-gradient-to-r from-violet-600 to-indigo-600'
+      className={`rounded-lg border-solid border  p-1 m-1 ${
+        gradient ? 'bg-violet-300 border-violet-300' : 'border-sky-500'
       }`}>
-      <Text className="text-lg">{text}</Text>
+      <Text className="text-md">{text}</Text>
     </View>
   );
 };
@@ -46,22 +46,28 @@ export const RecipeCard = ({
         <Badge text={`${course}`} gradient={false} />
       </View>
 
-      <Text className="text-xl mb-3">Ingredients:</Text>
+      <Text className="text-xl my-3">Ingredients:</Text>
       <View className="flex-row flex-wrap">
         {ingredientsHave.map(ingredient => (
-          <IngredientEmoji key={ingredient.name} name={ingredient.emoji} />
+          <View className="mr-1">
+            <IngredientEmoji key={ingredient.name} name={ingredient.emoji} />
+          </View>
         ))}
+      </View>
+      <View className="flex-row flex-wrap mt-1">
         {ingredientsMissing.map(ingredient => (
-          <IngredientEmoji
-            key={ingredient.name}
-            name={ingredient.emoji}
-            disabled
-          />
+          <View className="mr-1">
+            <IngredientEmoji
+              key={ingredient.name}
+              name={ingredient.emoji}
+              disabled
+            />
+          </View>
         ))}
       </View>
 
-      <Text className="text-xl mb-3">Instructions:</Text>
-      <Text className="text-lg">{instructions}</Text>
+      <Text className="text-xl my-3">Instructions:</Text>
+      <Text className="text-md">{instructions}</Text>
     </View>
   );
 };

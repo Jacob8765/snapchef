@@ -24,7 +24,7 @@ export const IngredientEmoji = ({
         disabled
           ? 'bg-gray-100'
           : TAILWIND_PASTEL_COLORS[
-              name.charCodeAt(0) % TAILWIND_PASTEL_COLORS.length
+              Math.floor(Math.random() * 100) % TAILWIND_PASTEL_COLORS.length
             ]
       }`}>
       <Text className="text-xl">{name}</Text>
