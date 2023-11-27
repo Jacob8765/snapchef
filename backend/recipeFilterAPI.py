@@ -1,14 +1,10 @@
 from flask import Flask, request, jsonify
-import requests
 import csv
 from io import StringIO
-from gradio_client import Client
-from PIL import Image
 from langchain.schema.messages import HumanMessage
 from langchain.chat_models import ChatOpenAI
 import base64
 import pandas as pd
-import os
 from constants import INGREDIENTS, INGREDIENTS_CSV_PATH
 
 from dotenv import load_dotenv
@@ -23,6 +19,12 @@ def index():
 
 @app.route('/identify_ingredients', methods=['POST'])
 def identify_ingredients():
+    """
+    Returns a list of ingredients present in the image, along with an emoji to be displayed in the app
+    Input: picture
+    Output: list of ingredients of the form [{'name': 'Orange', 'emoji': '🍊'}, ...]
+    """
+
     # convert the picture to base64
     picture = request.files['picture']
     picture = picture.read()
@@ -59,7 +61,14 @@ def identify_ingredients():
     return response
 
 @app.route('/find_recipes', methods=['POST'])
+
 def find_highest_matching_recipe():
+    """
+    Returns a list of recipes that match the ingredients list, including the percent match for each recipe.
+    Input: ingredients_list
+    Output: list of recipes
+    """
+
     # Convert CSV content to a dictionary
     ingredients_list = request.get_json()['ingredients_list']
 

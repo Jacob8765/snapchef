@@ -1,3 +1,5 @@
+import os
+
 INGREDIENTS = [
     ["Cucumber", "🥒",
      "Pasta", "🍝",
