@@ -64,3 +64,7 @@ app/.metro-health-check*
 
 # testing
 app/coverage
+
+#venv
+backend/venv
+backend/__pycache__

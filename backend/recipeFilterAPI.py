@@ -3,6 +3,14 @@ import requests
 import csv
 from io import StringIO
 import spacy
+from gradio_client import Client
+from PIL import Image
+from langchain.schema.messages import HumanMessage
+from langchain.chat_models import ChatOpenAI
+import base64
+
+from dotenv import load_dotenv
+load_dotenv(override=True)
 
 # Load the spaCy English model
 nlp = spacy.load('en_core_web_sm')
@@ -21,26 +29,40 @@ def extract_ingredients_from_text(text):
 # Endpoint for processing images and asking a predefined question to identify ingredients
 @app.route('/identify_ingredients', methods=['POST'])
 def identify_ingredients():
-    # Assuming the picture is sent as form-data with key 'picture'
+    # conver the picture to base64
     picture = request.files['picture']
+    picture = picture.read()
+    picture = base64.b64encode(picture)
+    picture = picture.decode('utf-8')
 
-    # hugging_face api endpoint
-    hugging_face_api_endpoint = 'https://huggingface.co/spaces/lykeven/CogVLM/resolve/main/'
+    def image_summarize(img_base64, prompt):
+        """Make image summary"""
+        chat = ChatOpenAI(model="gpt-4-vision-preview", max_tokens=1024)
 
-    # Prepare the data to send to the Hugging Face API
-    data = {'question': 'what ingredients are in this image'}
-    files = {'file': picture}
+        msg = chat.invoke(
+            [
+                HumanMessage(
+                    content=[
+                        {"type": "text", "text": prompt},
+                        {
+                            "type": "image_url",
+                            "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"},
+                        },
+                    ]
+                )
+            ]
+        )
+        return msg.content
 
-    # Send a POST request to the Hugging Face API
-    response = requests.post(hugging_face_api_endpoint, data=data, files=files)
+ # Prompt
+    prompt = """# SnapChef
+Output an array containing a list of the unique ingredients in this picture. For example, a valid output would be ["Orange", "Apple"].
+ You are allowed to choose from the following list of ingredients: ["Cucumber", "Carrot", "Pepper", "Onion", "Cheddar Cheese", "Lemon", "Lime", "Milk", "Eggs", "Flour", "Sugar", "Apple", "Strawberry"].
+ """
 
-    # Process the response from Hugging Face API to extract identified ingredients
-    result = response.json()
-
-    # Extract ingredients from the response text
-    ingredient_list = extract_ingredients_from_text(result.get('answer', ''))
-
-    return jsonify({'identified_ingredients': ingredient_list})
+    # Process the image with OpenAI's API
+    response = image_summarize(picture, prompt)
+    return response
 
 # Assuming the CSV file has a structure like:
 # Recipe,Ingredient1,Ingredient2,Ingredient3
