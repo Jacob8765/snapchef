@@ -1,18 +1,7 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import {IngredientEmoji} from '../Ingredients/IngredientEmoji';
-import {Ingredient} from '../../types/Ingredient';
-
-interface RecipeCardProps {
-  percentMatch: number;
-  name: string;
-  ingredientsHave: Ingredient[];
-  ingredientsMissing: Ingredient[];
-  instructions: string;
-  time: number;
-  servings: number;
-  course: string;
-}
+import type {Recipe} from '../../types/Recipe';
 
 const Badge = ({text, gradient}: {text: string; gradient: boolean}) => {
   return (
@@ -26,21 +15,21 @@ const Badge = ({text, gradient}: {text: string; gradient: boolean}) => {
 };
 
 export const RecipeCard = ({
-  percentMatch,
-  name,
-  ingredientsHave,
-  ingredientsMissing,
+  percent_match,
+  title,
+  ingredients_have,
+  ingredients_missing,
   instructions,
   time,
   servings,
   course,
-}: RecipeCardProps) => {
+}: Recipe) => {
   return (
     <View className="bg-gray-50 rounded-lg p-3 m-1">
-      <Text className="text-3xl font-serif mb-3">{name}</Text>
+      <Text className="text-3xl font-serif mb-3">{title}</Text>
 
       <View className="flex-row flex-wrap">
-        <Badge text={`${percentMatch}% Match`} gradient={true} />
+        <Badge text={`${percent_match.toFixed(2)}% Match`} gradient={true} />
         <Badge text={`${time} Minutes`} gradient={false} />
         <Badge text={`${servings} Servings`} gradient={false} />
         <Badge text={`${course}`} gradient={false} />
@@ -48,14 +37,14 @@ export const RecipeCard = ({
 
       <Text className="text-xl my-3">Ingredients:</Text>
       <View className="flex-row flex-wrap">
-        {ingredientsHave.map(ingredient => (
+        {ingredients_have.map(ingredient => (
           <View className="mr-1">
             <IngredientEmoji key={ingredient.name} name={ingredient.emoji} />
           </View>
         ))}
       </View>
       <View className="flex-row flex-wrap mt-1">
-        {ingredientsMissing.map(ingredient => (
+        {ingredients_missing.map(ingredient => (
           <View className="mr-1">
             <IngredientEmoji
               key={ingredient.name}

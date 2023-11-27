@@ -3,6 +3,7 @@ import {View, Text, ScrollView} from 'react-native';
 import {IngredientsContext} from '../contexts/IngredientsContext';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {RecipeCard} from '../components/Recipes/RecipeCard';
+import {useIngredients} from '../hooks/useRecipes';
 
 const DUMMY_RECIPES = [
   {
@@ -50,15 +51,24 @@ const DUMMY_RECIPES = [
 ];
 
 export const Recipes = () => {
-  const {ingredients} = React.useContext(IngredientsContext);
+  const {recipes, isLoading} = useIngredients();
+
+  if (isLoading) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView>
       <Text className="text-3xl font-serif m-3">Recipes:</Text>
 
       <View className="flex-row flex-wrap">
-        {DUMMY_RECIPES.map(recipe => (
+        {recipes.map(recipe => (
           <View className="m-1">
-            <RecipeCard key={recipe.name} {...recipe} />
+            <RecipeCard key={recipe.title} {...recipe} />
           </View>
         ))}
       </View>

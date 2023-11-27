@@ -1,3 +1,4 @@
+import math
 from flask import Flask, request, jsonify
 import csv
 from io import StringIO
@@ -5,7 +6,7 @@ from langchain.schema.messages import HumanMessage
 from langchain.chat_models import ChatOpenAI
 import base64
 import pandas as pd
-from constants import INGREDIENTS, INGREDIENTS_CSV_PATH
+from constants import INGREDIENTS_DICT, INGREDIENTS_CSV_PATH
 
 from dotenv import load_dotenv
 load_dotenv(override=True)
@@ -53,7 +54,7 @@ def identify_ingredients():
     # Prompt
     prompt = f"""# SnapChef
             Output an array containing a list of the unique ingredients in this picture, along with its corresponding emoji. For example, a valid output would be [{{'name': 'Orange', 'emoji': '🍊'}}, ...]. Your raw output will be parsed for JSON, so do NOT include backticks or any other data other than JSON.
-            You are allowed to choose from the following list of ingredients: {INGREDIENTS}.
+            You are allowed to choose from the following list of ingredients: {INGREDIENTS_DICT}.
             """
 
     # Process the image with OpenAI's API
@@ -61,22 +62,33 @@ def identify_ingredients():
     return response
 
 @app.route('/find_recipes', methods=['POST'])
-
 def find_highest_matching_recipe():
     """
     Returns a list of recipes that match the ingredients list, including the percent match for each recipe.
     Input: ingredients_list
     Output: list of recipes
     """
+    print(f"Request: {request.get_json()}")
 
     # Convert CSV content to a dictionary
     ingredients_list = request.get_json()['ingredients_list']
 
     recipe_csv = pd.read_excel(INGREDIENTS_CSV_PATH)
-    recipe_csv['percent_match'] = recipe_csv['ingredients'].apply(lambda x: len(set(x.split(", ")).intersection(ingredients_list)) / len(x.split(", ")))
+    recipe_csv['percent_match'] = recipe_csv['ingredients'].apply(lambda x: (len(set(x.split(", ")).intersection(ingredients_list)) / len(x.split(", ")) * 100))
+    recipe_csv['ingredients_have'] = recipe_csv['ingredients'].apply(lambda x: ingredients_to_dict(set(x.split(", ")).intersection(ingredients_list)))
+    recipe_csv['ingredients_missing'] = recipe_csv['ingredients'].apply(lambda x: ingredients_to_dict(set(x.split(", ")).difference(ingredients_list)))
+    recipe_csv['time'] = "30 minutes"
+    recipe_csv['course'] = "Dinner"
+    recipe_csv['servings'] = 4
+
     data = recipe_csv.sort_values(by=['percent_match'], ascending=False).head(3).to_json(orient='records')
     return data
 
+def ingredients_to_dict(ingredients):
+    """
+    Converts a list of ingredients to a dictionary of ingredients with emojis
+    """
+    return [{'name': ingredient, 'emoji': INGREDIENTS_DICT.get(ingredient, "🍽️")} for ingredient in ingredients]
 
 if __name__ == '__main__':
     app.run(debug=True)
