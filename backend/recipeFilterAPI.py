@@ -91,4 +91,4 @@ def ingredients_to_dict(ingredients):
     return [{'name': ingredient, 'emoji': INGREDIENTS_DICT.get(ingredient, "🍽️")} for ingredient in ingredients]
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8000, debug=True)

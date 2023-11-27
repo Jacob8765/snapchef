@@ -13,7 +13,7 @@ export function useIngredients() {
     console.log('PAYLOAD', payload);
 
     try {
-      const res = await fetch('http://127.0.0.1:5000/find_recipes', {
+      const res = await fetch('http://10.0.4.83:8000/find_recipes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -15,6 +15,7 @@ import {
   useCameraPermission,
 } from 'react-native-vision-camera';
 import {IngredientsContext} from '../contexts/IngredientsContext';
+import {getIngredientsFromImage} from '../utils/getIngredientsFromImage';
 
 /*
  * 1. Take the picture
@@ -85,28 +86,41 @@ export const CameraView = ({navigation}: {navigation: any}) => {
   const takePhoto = async () => {
     if (!camera.current || photo) return;
     const file = await camera.current.takePhoto();
-    const result = await fetch(`file://${file.path}`);
+    const filePath = file.path;
+
+    const result = await fetch(`file://${filePath}`);
     const data = await result.blob();
+
     setIsActive(false);
     setPhoto(data);
-    getIngredients(data);
-    console.log(result, data);
+    getIngredients(filePath);
+    console.log('took picture', data);
   };
 
-  const getIngredients = async (photo: Blob) => {
-    //simulate a delay
-    setTimeout(() => {
-      // add some new ingredients
-      const newIngredients = [
-        ...ingredients,
-        {name: 'Tomato', emoji: '🍅'},
-        {name: 'Onion', emoji: '🧅'},
-        {name: 'Garlic', emoji: '🧄'},
-      ];
+  const getIngredients = async (filePath: string) => {
+    try {
+      //convert image to base64
+      const res = await getIngredientsFromImage(filePath);
+      const newIngredients = [...ingredients, ...res];
       setIngredients(newIngredients);
-      // navigate back to the ingredients page
       navigation.navigate('Ingredients');
-    }, 3000);
+    } catch (e) {
+      console.log(e);
+    }
+
+    //simulate a delay
+    // setTimeout(() => {
+    //   // add some new ingredients
+    //   // const newIngredients = [
+    //   //   ...ingredients,
+    //   //   {name: 'Tomato', emoji: '🍅'},
+    //   //   {name: 'Onion', emoji: '🧅'},
+    //   //   {name: 'Garlic', emoji: '🧄'},
+    //   // ];
+    //   setIngredients(newIngredients);
+    //   // navigate back to the ingredients page
+    //   navigation.navigate('Ingredients');
+    // }, 3000);
   };
 
   if (!hasPermission) {
