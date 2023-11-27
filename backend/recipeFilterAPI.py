@@ -12,6 +12,64 @@ import base64
 from dotenv import load_dotenv
 load_dotenv(override=True)
 
+INGREDIENTS = [
+    ["Cucumber", "🥒",
+     "Pasta", "🍝",
+     "Canned olives", "🫒",
+     "Bell peppers", "🫑",
+     "Tomatoes", "🍅",
+     "Tomato sauce", "🍅",
+     "Olive oil", "🫒",
+     "Garlic", "🧄",
+     "Salt", "🧂",
+     "Pepper", "🧂",
+     "Chicken", "🍗",
+     "Chicken broth", "🍗",
+     "Cumin", "🧂",
+     "Lentils", "🫐",
+        "Onions", "🧅",
+        "Eggs", "🥚",
+        "Flour", "🌾",
+        "Sugar", "🧂",
+        "Milk", "🥛",
+        "Baking powder", "🧂",
+        "Butter", "🧈",
+        "Cinnamon", "🧂",
+        "Oats", "🌾",
+        "Apple sauce", "🍎",
+        "Chocolate chips", "🍫",
+        "Dried herbs", "🌿",
+        "Rice", "🍚",
+        "Canned beans", "🫐",
+        "Salmon", "🐟",
+        "Honey", "🍯",
+        "Soy sauce", "🧂",
+        "Balsamic vinegar", "🧂",
+        "Peanut butter", "🥜",
+        "Jelly", "🍇",
+        "Bananas", "🍌",
+        "Bread", "🍞",
+        "Mustard", "🧂",
+        "Mayonnaise", "🧂",
+        "Ketchup", "🧂",
+        "Pickles", "🧂",
+        "Cheese", "🧀",
+        "Potatoes", "🥔",
+        "Coffee", "☕",
+        "Steak", "🥩",
+        "Pork", "🥩",
+        "Bacon", "🥓",
+        "Sausage", "🥓",
+        "Crackers", "🧂",
+        "Coffee", "☕",
+        "Tea", "🍵",
+        "Tofu", "🥬",
+        "Cereal", "🌾",
+        "Yogurt", "🥛",
+        "Sweet potatoes", "🥔",
+     ]
+]
+
 # Load the spaCy English model
 nlp = spacy.load('en_core_web_sm')
 
@@ -36,7 +94,7 @@ def identify_ingredients():
     picture = picture.decode('utf-8')
 
     def image_summarize(img_base64, prompt):
-        """Make image summary"""
+        """Get the list of ingredients in the image."""
         chat = ChatOpenAI(model="gpt-4-vision-preview", max_tokens=1024)
 
         msg = chat.invoke(
@@ -55,9 +113,9 @@ def identify_ingredients():
         return msg.content
 
  # Prompt
-    prompt = """# SnapChef
+    prompt = f"""# SnapChef
 Output an array containing a list of the unique ingredients in this picture. For example, a valid output would be ["Orange", "Apple"].
- You are allowed to choose from the following list of ingredients: ["Cucumber", "Carrot", "Pepper", "Onion", "Cheddar Cheese", "Lemon", "Lime", "Milk", "Eggs", "Flour", "Sugar", "Apple", "Strawberry"].
+ You are allowed to choose from the following list of ingredients: {INGREDIENTS}.
  """
 
     # Process the image with OpenAI's API
