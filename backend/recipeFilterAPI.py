@@ -77,7 +77,7 @@ def find_highest_matching_recipe():
     recipe_csv['percent_match'] = recipe_csv['ingredients'].apply(lambda x: (len(set(x.split(", ")).intersection(ingredients_list)) / len(x.split(", ")) * 100))
     recipe_csv['ingredients_have'] = recipe_csv['ingredients'].apply(lambda x: ingredients_to_dict(set(x.split(", ")).intersection(ingredients_list)))
     recipe_csv['ingredients_missing'] = recipe_csv['ingredients'].apply(lambda x: ingredients_to_dict(set(x.split(", ")).difference(ingredients_list)))
-    recipe_csv['time'] = "30 minutes"
+    recipe_csv['time'] = "30"
     recipe_csv['course'] = "Dinner"
     recipe_csv['servings'] = 4
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {Ingredient} from '../../types/Ingredient';
 
 const TAILWIND_PASTEL_COLORS = [
   'bg-red-100',
@@ -12,22 +13,27 @@ const TAILWIND_PASTEL_COLORS = [
 ];
 
 export const IngredientEmoji = ({
-  name,
+  ingredient,
   disabled,
+  index,
 }: {
-  name: string;
+  ingredient: Ingredient;
   disabled?: boolean;
+  index: number;
 }) => {
+  const [isFullNameVisable, setIsFullNameVisable] = React.useState(false);
+
   return (
-    <View
+    <TouchableOpacity
+      onPress={() => setIsFullNameVisable(!isFullNameVisable)}
       className={`rounded-lg p-3 text-2xl ${
         disabled
           ? 'bg-gray-100'
-          : TAILWIND_PASTEL_COLORS[
-              Math.floor(Math.random() * 100) % TAILWIND_PASTEL_COLORS.length
-            ]
+          : TAILWIND_PASTEL_COLORS[index % TAILWIND_PASTEL_COLORS.length]
       }`}>
-      <Text className="text-xl">{name}</Text>
-    </View>
+      <Text className="text-xl">
+        {isFullNameVisable ? ingredient.name : ingredient.emoji}
+      </Text>
+    </TouchableOpacity>
   );
 };

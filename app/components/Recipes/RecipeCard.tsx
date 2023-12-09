@@ -36,19 +36,24 @@ export const RecipeCard = ({
       </View>
 
       <Text className="text-xl my-3">Ingredients:</Text>
-      <View className="flex-row flex-wrap">
-        {ingredients_have.map(ingredient => (
-          <View className="mr-1">
-            <IngredientEmoji key={ingredient.name} name={ingredient.emoji} />
+      <View className="flex-row flex-wrap my-1">
+        {ingredients_have.map((ingredient, index) => (
+          <View className="mr-2">
+            <IngredientEmoji
+              key={ingredient.name + ' ' + index}
+              index={index}
+              ingredient={ingredient}
+            />
           </View>
         ))}
       </View>
-      <View className="flex-row flex-wrap mt-1">
-        {ingredients_missing.map(ingredient => (
-          <View className="mr-1">
+      <View className="flex-row flex-wrap">
+        {ingredients_missing.map((ingredient, index) => (
+          <View className="mr-2 my-1">
             <IngredientEmoji
-              key={ingredient.name}
-              name={ingredient.emoji}
+              index={index}
+              key={ingredient.name + ' ' + index}
+              ingredient={ingredient}
               disabled
             />
           </View>

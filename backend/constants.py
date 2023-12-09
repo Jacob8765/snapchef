@@ -34,7 +34,7 @@ INGREDIENTS_DICT = {
     "Soy sauce": "🧂",
     "Balsamic vinegar": "🧂",
     "Peanut butter": "🥜",
-    "Jelly": "🍇",
+    "Jam": "🍇",
     "Bananas": "🍌",
     "Bread": "🍞",
     "Mustard": "🧂",
@@ -55,6 +55,7 @@ INGREDIENTS_DICT = {
     "Cereal": "🌾",
     "Yogurt": "🥛",
     "Sweet potatoes": "🥔",
+    "Vanilla extract": "🧂",
 }
 
 INGREDIENTS_CSV_PATH = os.getcwd() + "/../datasets/recipes_dataset_v2.xlsx"

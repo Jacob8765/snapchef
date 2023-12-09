@@ -43,7 +43,7 @@ export const CameraView = ({navigation}: {navigation: any}) => {
     if (photo) {
       Animated.timing(animatedValue, {
         toValue: 1,
-        duration: 800,
+        duration: 1000,
         easing: Easing.ease,
         useNativeDriver: false, // set to true if supported
       }).start();
@@ -85,7 +85,7 @@ export const CameraView = ({navigation}: {navigation: any}) => {
 
   const takePhoto = async () => {
     if (!camera.current || photo) return;
-    const file = await camera.current.takePhoto();
+    const file = await camera.current.takePhoto({flash: 'off'});
     const filePath = file.path;
 
     const result = await fetch(`file://${filePath}`);
@@ -107,20 +107,6 @@ export const CameraView = ({navigation}: {navigation: any}) => {
     } catch (e) {
       console.log(e);
     }
-
-    //simulate a delay
-    // setTimeout(() => {
-    //   // add some new ingredients
-    //   // const newIngredients = [
-    //   //   ...ingredients,
-    //   //   {name: 'Tomato', emoji: '🍅'},
-    //   //   {name: 'Onion', emoji: '🧅'},
-    //   //   {name: 'Garlic', emoji: '🧄'},
-    //   // ];
-    //   setIngredients(newIngredients);
-    //   // navigate back to the ingredients page
-    //   navigation.navigate('Ingredients');
-    // }, 3000);
   };
 
   if (!hasPermission) {

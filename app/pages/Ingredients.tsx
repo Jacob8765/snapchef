@@ -51,7 +51,7 @@ export const Ingredients = ({navigation}: {navigation: any}) => {
           }
           data={ingredients}
           renderItem={({item, index}) => (
-            <IngredientItem key={item.name} item={item} />
+            <IngredientItem key={item.name} item={item} index={index} />
           )}
           renderHiddenItem={(item, index) =>
             renderDeleteButton({
